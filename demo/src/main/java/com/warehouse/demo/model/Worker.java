@@ -32,4 +32,6 @@ public class Worker {
     private Long phoneNumber;
 
     private Long pesel;
+
+    private Specialization specialization;
 }

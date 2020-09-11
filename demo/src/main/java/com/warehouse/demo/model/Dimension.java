@@ -21,4 +21,6 @@ public class Dimension {
     private Integer height;
 
     private Integer width;
+
+    private Integer length;
 }

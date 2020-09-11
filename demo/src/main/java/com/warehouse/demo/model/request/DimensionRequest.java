@@ -15,4 +15,6 @@ public class DimensionRequest {
     private Integer height;
 
     private Integer width;
+
+    private Integer length;
 }

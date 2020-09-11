@@ -1,0 +1,19 @@
+{
+    "name": "Stainway&sons",
+    "weight": 500,
+    "price": 699999,
+    "dimension": {
+        "height": 1.3,
+        "width": 1.54,
+        "length": 2.74
+    },
+    "sku": "asosekos",
+    "modelOfPiano": "D",
+    "producer": {
+        "companyName": "stainway&sons"
+    },
+    "warehouse": {
+        "description": "this is a place where we awd",
+        "locatio": "Krakow"
+    }
+}

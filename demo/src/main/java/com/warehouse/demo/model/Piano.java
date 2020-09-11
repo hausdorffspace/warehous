@@ -11,7 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Product {
+public class Piano {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +35,7 @@ public class Product {
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "type_of_product")
-    private TypeProduct typeOfProduct;
+    private ModelOfPiano modelOfPiano;
 
     @ManyToOne(
             cascade = CascadeType.ALL
