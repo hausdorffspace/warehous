@@ -1,6 +1,5 @@
-package com.warehouse.demo.model.status;
+package com.warehouse.demo.model;
 
-import com.warehouse.demo.model.Product;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,8 +21,4 @@ public class Dimension {
     private Integer height;
 
     private Integer width;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "priduct_id")
-    private Product product;
 }

@@ -1,0 +1,1 @@
+INSERT INTO warehouse(description,location) VALUES ('aawd','Krakow');
