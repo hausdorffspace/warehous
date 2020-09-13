@@ -11,6 +11,7 @@ import com.warehouse.demo.repository.PianoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -69,12 +70,16 @@ public class PianoService {
     }
 
 
-    //When getPianoByName can not find entity throw null pointer exception
     public Optional<Piano> getPianioByName(String name){
         return Optional.ofNullable(pianoRepository.getPianoByName(name));
     }
 
-    //TODO
+    /*public Optional<List<Piano>> getAllPianoByType(){
+        return Optional.ofNullable(pianoRepository.getAllPianoByModel());
+    }*/
+
+
+
     private ModelOfPiano modelChecker(String model){
         if (model.toLowerCase().contentEquals(new StringBuffer("D"))){
             return ModelOfPiano.GRAND_PIANO_D_274;
