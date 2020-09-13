@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PianoRepository extends JpaRepository<Piano,Long> {
 
-    @Query(value = "SELECT * FROM piano As p WHERE p.name=:name", nativeQuery = true)
+    @Query(value = "SELECT * FROM piano AS p WHERE p.name=:name", nativeQuery = true)
     Piano getPianoByName(@Param("name") String name);
-
 }

@@ -1,5 +1,6 @@
 package com.warehouse.demo.exception;
 
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -8,18 +9,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.time.ZonedDateTime;
 
 @RestControllerAdvice
-public class PianoNotFoundAdvice {
+public class CannotSavePIanoToTheDatabaseAdvice {
 
-    @ExceptionHandler(PianoNotFoundException.class)
-    public ResponseEntity<?> pianoNotFoundHandler(PianoNotFoundException ex){
-        HttpStatus notFound = HttpStatus.NOT_FOUND;
-        ResponseBodyException exceptionBody = new ResponseBodyException(
+    @ExceptionHandler(CannotSavePianoToTheDatabase.class)
+    public ResponseEntity<?> canNotSaavePianoToTheDatabaseHandler(CannotSavePianoToTheDatabase ex) {
+        HttpStatus badRequest = HttpStatus.BAD_REQUEST;
+        return new ResponseEntity<>(new ResponseBodyException(
                 ex.getMessage(),
                 ex,
-                notFound,
+                badRequest,
                 ZonedDateTime.now()
-        );
-        return new ResponseEntity<>(exceptionBody,notFound);
+        ), badRequest);
     }
-
 }

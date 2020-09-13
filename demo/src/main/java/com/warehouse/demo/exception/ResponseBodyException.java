@@ -2,7 +2,6 @@ package com.warehouse.demo.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
@@ -12,7 +11,7 @@ import java.time.ZonedDateTime;
 @AllArgsConstructor
 @Setter
 @Getter
-public class ResponseBodyOfPianoNotFoundException {
+public class ResponseBodyException {
 
     private final String message;
 

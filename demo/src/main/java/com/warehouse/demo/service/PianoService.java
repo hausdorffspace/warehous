@@ -2,7 +2,6 @@ package com.warehouse.demo.service;
 
 
 import com.warehouse.demo.model.*;
-import com.warehouse.demo.model.request.DimensionRequest;
 import com.warehouse.demo.model.request.PianoRequest;
 import com.warehouse.demo.model.response.DimensionResponse;
 import com.warehouse.demo.model.response.PianoResponse;
@@ -12,7 +11,6 @@ import com.warehouse.demo.repository.PianoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Service
@@ -26,7 +24,7 @@ public class PianoService {
     }
 
     //TODO return optional<pianoResponse> ????
-    public PianoResponse save(PianoRequest pianoRequest) {
+    public Optional<PianoResponse> save(PianoRequest pianoRequest) {
 
         Piano save = pianoRepository.save(Piano.builder()
                 .name(pianoRequest.getName())
@@ -48,7 +46,7 @@ public class PianoService {
                         .build())
                 .build());
 
-        return PianoResponse.builder()
+        return Optional.ofNullable(PianoResponse.builder()
                 .id(save.getId())
                 .name(save.getName())
                 .price(save.getPrice())
@@ -67,32 +65,13 @@ public class PianoService {
                         .description(save.getWarehouse().getDescription())
                         .location(save.getWarehouse().getLocation())
                         .build())
-                .build();
+                .build());
     }
 
-    public Optional<PianoResponse> getPianioByName(String name){
-        Piano pianoByName = pianoRepository.getPianoByName(name);
-        System.out.println(pianoByName);
-        return Optional.of(PianoResponse.builder()
-                .id(pianoByName.getId())
-                .name(pianoByName.getName())
-                .price(pianoByName.getPrice())
-                .weight(pianoByName.getWeight())
-                .SKU(pianoByName.getSKU())
-                .dimension(DimensionResponse.builder()
-                        .height(pianoByName.getDimension().getHeight())
-                        .width(pianoByName.getDimension().getWidth())
-                        .Length(pianoByName.getDimension().getLength())
-                        .build())
-                .modelOfPiano(pianoByName.getModelOfPiano())
-                .producer(ProducerResponse.builder()
-                        .companyName(pianoByName.getProducer().getCompanyName())
-                        .build())
-                .warehouse(WarehouseResponse.builder()
-                        .description(pianoByName.getWarehouse().getDescription())
-                        .location(pianoByName.getWarehouse().getLocation())
-                        .build())
-                .build());
+
+    //When getPianoByName can not find entity throw null pointer exception
+    public Optional<Piano> getPianioByName(String name){
+        return Optional.ofNullable(pianoRepository.getPianoByName(name));
     }
 
     //TODO
