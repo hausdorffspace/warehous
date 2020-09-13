@@ -33,8 +33,8 @@ public class Piano {
 
     private String SKU;
 
-    @Enumerated(EnumType.ORDINAL)
-    @Column(name = "type_of_product")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "model_of_piano")
     private ModelOfPiano modelOfPiano;
 
     @ManyToOne(

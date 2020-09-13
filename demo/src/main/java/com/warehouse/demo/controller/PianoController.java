@@ -2,6 +2,7 @@ package com.warehouse.demo.controller;
 
 
 import com.warehouse.demo.exception.CannotSavePianoToTheDatabase;
+import com.warehouse.demo.exception.EmptyDatabasePianoException;
 import com.warehouse.demo.exception.PianoNotFoundException;
 import com.warehouse.demo.model.Piano;
 import com.warehouse.demo.model.request.PianoRequest;
@@ -10,12 +11,15 @@ import com.warehouse.demo.model.response.PianoResponse;
 import com.warehouse.demo.model.response.ProducerResponse;
 import com.warehouse.demo.model.response.WarehouseResponse;
 import com.warehouse.demo.service.PianoService;
+import jdk.nashorn.internal.objects.annotations.Getter;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 
 @RestController(value = "/api")
@@ -62,5 +66,21 @@ public class PianoController {
                         .build(),
                 HttpStatus.OK);
     }
+
+
+    @GetMapping(value = "/pianos")
+    public ResponseEntity<List<Piano>> getAllPiano(){
+        List<Piano> allPiano = pianoService.getAllPiano();
+        if(allPiano.isEmpty()){
+            throw new EmptyDatabasePianoException();
+        } else {
+            return new ResponseEntity<>(allPiano,HttpStatus.OK);
+        }
+    }
+
+    /*@GetMapping(value ="/pianos")
+    public ResponseEntity<> getAllPianoByModel(@PathVariable(name = "model") String model){
+
+    }*/
 
 }

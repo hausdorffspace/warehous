@@ -33,7 +33,7 @@ public class PianoRequest {
 
     //expect S, M, O, A, B, C, D
     @NotNull
-    private String modelOfPiano;
+    private ModelPianoRequest modelOfPiano;
 
     @NotNull
     private ProducerRequest producer;
