@@ -15,17 +15,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+
 @Service
 public class PianoService {
 
+    @Autowired
     private PianoRepository pianoRepository;
 
-    @Autowired
-    public PianoService(PianoRepository pianoRepository) {
-        this.pianoRepository = pianoRepository;
-    }
-
-    //TODO return optional<pianoResponse> ????
     public Optional<PianoResponse> save(PianoRequest pianoRequest) {
 
         Piano savePiano = pianoRepository.save(mapPianoRequestToPiano(pianoRequest));
@@ -36,6 +32,7 @@ public class PianoService {
                 .price(savePiano.getPrice())
                 .weight(savePiano.getWeight())
                 .SKU(savePiano.getSKU())
+                .borrowed(savePiano.getBorrowed())
                 .dimension(DimensionResponse.builder()
                         .height(savePiano.getDimension().getHeight())
                         .width(savePiano.getDimension().getWidth())
@@ -56,10 +53,21 @@ public class PianoService {
         return Optional.ofNullable(pianoRepository.getPianoByName(name));
     }
 
-    public Optional<List<Piano>> getAllPianoByType(String modelOfPiano){
+    public Optional<List<Piano>> getAllPianoByModel(String modelOfPiano){
         return Optional.ofNullable(pianoRepository.getAllPianoByModel(modelOfPiano));
     }
 
+    public Optional<List<Piano>> getAllPiano() {
+        return Optional.ofNullable(pianoRepository.findAll());
+    }
+
+    public Optional<Piano> updatePianoWithSku(String sku){
+        return  Optional.ofNullable(pianoRepository.updatePianoWithSku(sku));
+    }
+
+    public Optional<Piano> deletePianoWithSku(String sku){
+        return Optional.ofNullable(pianoRepository.deletePianoWithSku(sku));
+    }
 
     private ModelOfPiano modelChecker(ModelPianoRequest model) {
         ModelOfPiano modelOfPiano;
@@ -120,7 +128,4 @@ public class PianoService {
                 .build();
     }
 
-    public List<Piano> getAllPiano() {
-        return pianoRepository.findAll();
-    }
 }

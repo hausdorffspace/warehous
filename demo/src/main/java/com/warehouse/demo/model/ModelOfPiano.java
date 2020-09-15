@@ -1,9 +1,10 @@
 package com.warehouse.demo.model;
 
 
+import java.io.Serializable;
 
-//TODO edite all enum , make a new fild with specification etc.
-public enum ModelOfPiano {
+
+public enum ModelOfPiano implements Serializable {
     GRAND_PIANO_S_155(""),
     GRAND_PIANO_M_170("dawd"),
     GRAND_PIANO_O_180("dawd"),

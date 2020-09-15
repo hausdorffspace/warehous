@@ -32,4 +32,6 @@ public class PianoResponse {
     private ProducerResponse producer;
 
     private WarehouseResponse warehouse;
+
+    private Boolean borrowed;
 }

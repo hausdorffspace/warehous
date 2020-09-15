@@ -1,4 +1,6 @@
 package com.warehouse.demo.model;
 
-public enum Specialization {
+import java.io.Serializable;
+
+public enum Specialization implements Serializable {
 }
