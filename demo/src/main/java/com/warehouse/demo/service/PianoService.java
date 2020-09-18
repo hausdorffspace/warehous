@@ -72,10 +72,21 @@ public class PianoService {
     }
 
     public Optional<Piano> deletePianoWithSku(String sku){
+        Piano pianoBySKU = pianoRepository.getPianoBySKU(sku);
         Integer isDelete = pianoRepository.deletePianoWithSku(sku);
         if (isDelete == 1){
-            return Optional.ofNullable(pianoRepository.getPianoBySKU(sku));
+            return Optional.ofNullable(pianoBySKU);
         }else {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<Piano> deletePianoById(Long id){
+        Piano pianoById = pianoRepository.getPianoById(id);
+        Integer isDelete = pianoRepository.deletePianoWithId(id);
+        if (isDelete==1){
+            return Optional.ofNullable(pianoById);
+        } else {
             return Optional.empty();
         }
     }

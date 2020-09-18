@@ -71,6 +71,14 @@ public class PianoController {
                 HttpStatus.OK);
     }
 
+    @DeleteMapping(value = "deletePianoById/{id}")
+    public ResponseEntity<PianoResponse> deletePianoById(@PathVariable(name = "id") Long id) {
+        return new ResponseEntity<>(
+                mapOptionalPianoToOptionalResponsePiano(pianoService.deletePianoById(id))
+                        .orElseThrow(() -> new PianoNotFoundException("piano id: " + id)),
+                HttpStatus.OK);
+    }
+
     @DeleteMapping(value = "/deletePianoWithSku/{sku}")
     public ResponseEntity<PianoResponse> deletePianoWithSku(@PathVariable(name = "sku") String sku) {
         return new ResponseEntity<>(
