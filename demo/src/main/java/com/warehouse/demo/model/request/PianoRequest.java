@@ -26,9 +26,6 @@ public class PianoRequest {
     @NotNull
     private DimensionRequest dimension;
 
-    @NotBlank
-    private String sku;
-
     //expect S, M, O, A, B, C, D
     @NotNull
     private ModelPianoRequest modelOfPiano;

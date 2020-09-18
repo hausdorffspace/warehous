@@ -32,6 +32,7 @@ public class Piano implements Serializable {
     @JoinColumn(name = "dimension_id")
     private Dimension dimension;
 
+    @Column(unique = true)
     private String SKU;
 
     @Enumerated(EnumType.STRING)

@@ -104,7 +104,6 @@ class PianoServiceTest {
         return PianoRequest.builder()
                 .name("testName")
                 .price(1)
-                .sku("QWERTY")
                 .weight(1)
                 .dimension(DimensionRequest.builder()
                         .height(1)

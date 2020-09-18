@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 
 @Service
@@ -53,38 +54,37 @@ public class PianoService {
         return Optional.ofNullable(pianoRepository.getPianoByName(name));
     }
 
-    public Optional<List<Piano>> getAllPianoByModel(String modelOfPiano){
-        return Optional.ofNullable(pianoRepository.getAllPianoByModel(modelOfPiano));
+    public Optional<List<Piano>> getAllPianoByModel(String modelOfPiano) {
+        return Optional.ofNullable(pianoRepository.getAllPianoByModel(mapperModelOfPiano(modelOfPiano)));
     }
 
     public Optional<List<Piano>> getAllPiano() {
         return Optional.ofNullable(pianoRepository.findAll());
     }
 
-    public Optional<Piano> updatePianoWithSku(String sku, Integer price){
+    public Optional<Piano> updatePianoWithSku(String sku, Integer price) {
         Integer isUpdate = pianoRepository.updatePianoWithSku(sku, price);
-        if (isUpdate == 1){
+        if (isUpdate == 1) {
             return Optional.ofNullable(pianoRepository.getPianoBySKU(sku));
         } else {
             return Optional.empty();
         }
-
     }
 
-    public Optional<Piano> deletePianoWithSku(String sku){
+    public Optional<Piano> deletePianoWithSku(String sku) {
         Piano pianoBySKU = pianoRepository.getPianoBySKU(sku);
         Integer isDelete = pianoRepository.deletePianoWithSku(sku);
-        if (isDelete == 1){
+        if (isDelete == 1) {
             return Optional.ofNullable(pianoBySKU);
-        }else {
+        } else {
             return Optional.empty();
         }
     }
 
-    public Optional<Piano> deletePianoById(Long id){
+    public Optional<Piano> deletePianoById(Long id) {
         Piano pianoById = pianoRepository.getPianoById(id);
         Integer isDelete = pianoRepository.deletePianoWithId(id);
-        if (isDelete==1){
+        if (isDelete == 1) {
             return Optional.ofNullable(pianoById);
         } else {
             return Optional.empty();
@@ -138,7 +138,7 @@ public class PianoService {
                         .width(pianoRequest.getDimension().getWidth())
                         .length(pianoRequest.getDimension().getLength())
                         .build())
-                .SKU(pianoRequest.getSku())
+                .SKU(generateSKU())
                 .borrowed(false)
                 .modelOfPiano(modelChecker(pianoRequest.getModelOfPiano()))   // TODO message or description , add rescription in swagger
                 .producer(Producer.builder()
@@ -149,6 +149,57 @@ public class PianoService {
                         .location(pianoRequest.getWarehouse().getLocation())
                         .build())
                 .build();
+    }
+
+
+    private String mapperModelOfPiano(String modelOfPiano) {
+        switch (modelOfPiano) {
+
+            case "A":
+                modelOfPiano = ModelOfPiano.GRAND_PIANO_A_188.name();
+                break;
+            case "B":
+                modelOfPiano = ModelOfPiano.GRAND_PIANO_B_211.name();
+                break;
+            case "C":
+                modelOfPiano = ModelOfPiano.GRAND_PIANO_C_227.name();
+                break;
+            case "D":
+                modelOfPiano = ModelOfPiano.GRAND_PIANO_D_274.name();
+                break;
+            case "M":
+                modelOfPiano = ModelOfPiano.GRAND_PIANO_M_170.name();
+                break;
+            case "O":
+                modelOfPiano = ModelOfPiano.GRAND_PIANO_O_180.name();
+                break;
+            case "S":
+                modelOfPiano = ModelOfPiano.GRAND_PIANO_S_155.name();
+                break;
+            case "K":
+                modelOfPiano = ModelOfPiano.UPRIGHT_PIANO_K_132.name();
+                break;
+            case "V":
+                modelOfPiano = ModelOfPiano.UPRIGHT_PIANO_V_125.name();
+                break;
+            default:
+                modelOfPiano = ModelOfPiano.GRAND_PIANO_B_211.name();
+                break;
+        }
+        return modelOfPiano;
+    }
+
+    private String generateSKU() {
+        int leftLimit = 97;
+        int rightLimit = 122;
+        int targetStringLength = 10;
+        Random random = new Random();
+
+        return random.ints(leftLimit, rightLimit + 1)
+                .limit(targetStringLength)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString()
+                .toUpperCase();
     }
 
 }

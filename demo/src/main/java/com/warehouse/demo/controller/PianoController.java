@@ -12,6 +12,7 @@ import com.warehouse.demo.model.response.PianoResponse;
 import com.warehouse.demo.model.response.ProducerResponse;
 import com.warehouse.demo.model.response.WarehouseResponse;
 import com.warehouse.demo.service.PianoService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,7 @@ public class PianoController {
         this.pianoService = pianoService;
     }
 
-
+    //ok
     @PostMapping(value = "/save")
     public ResponseEntity<PianoResponse> savePiano(@Valid @RequestBody PianoRequest pianoRequest) {
         PianoResponse pianoResponse = pianoService.save(pianoRequest).orElseThrow(() -> new CannotSavePianoToTheDatabase(pianoRequest));
@@ -46,6 +47,7 @@ public class PianoController {
         return new ResponseEntity<>(mapPianoToResponsePiano(pianoByName), HttpStatus.OK);
     }
 
+    //ok
     @GetMapping(value = "/pianos")
     public ResponseEntity<List<PianoResponse>> getAllPiano() {
         return new ResponseEntity<>(
@@ -53,6 +55,17 @@ public class PianoController {
                 HttpStatus.OK);
     }
 
+    //ok
+    @ApiOperation(value = "find piano by model" ,notes = "required param is: \n" +
+            "S for GRAND_PIANO_S_155,\n" +
+            "M for    GRAND_PIANO_M_170,\n" +
+            "O for    GRAND_PIANO_O_180,\n" +
+            "A for    GRAND_PIANO_A_188,\n" +
+            "B for    GRAND_PIANO_B_211,\n" +
+            "C for    GRAND_PIANO_C_227,\n" +
+            "D for    GRAND_PIANO_D_274,\n" +
+            "V for    UPRIGHT_PIANO_V_125,\n" +
+            "K for    UPRIGHT_PIANO_K_132")
     @GetMapping(value = "/pianosByModel/{model}")
     public ResponseEntity<List<PianoResponse>> getAllPianoByModel(@PathVariable(name = "model") String model) {
         return new ResponseEntity<>(
@@ -60,6 +73,7 @@ public class PianoController {
                 HttpStatus.OK);
     }
 
+    //ok
     @PutMapping(value = "/updatePiano/{sku}/{price}")
     public ResponseEntity<PianoResponse> updatePianoWithSku(
             @PathVariable(name = "sku") String sku,
@@ -71,6 +85,7 @@ public class PianoController {
                 HttpStatus.OK);
     }
 
+    //ok
     @DeleteMapping(value = "deletePianoById/{id}")
     public ResponseEntity<PianoResponse> deletePianoById(@PathVariable(name = "id") Long id) {
         return new ResponseEntity<>(
@@ -79,6 +94,7 @@ public class PianoController {
                 HttpStatus.OK);
     }
 
+    //ok
     @DeleteMapping(value = "/deletePianoWithSku/{sku}")
     public ResponseEntity<PianoResponse> deletePianoWithSku(@PathVariable(name = "sku") String sku) {
         return new ResponseEntity<>(
@@ -100,7 +116,6 @@ public class PianoController {
         );
     }
 
-    //duplikacja
     private PianoResponse mapPianoToResponsePiano(Piano piano) {
         return PianoResponse.builder()
                 .id(piano.getId())
