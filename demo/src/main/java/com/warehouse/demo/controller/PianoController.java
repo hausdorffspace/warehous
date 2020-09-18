@@ -1,7 +1,6 @@
 package com.warehouse.demo.controller;
 
 
-import com.warehouse.demo.Test;
 import com.warehouse.demo.exception.CannotSavePianoToTheDatabase;
 import com.warehouse.demo.exception.EmptyDatabasePianoException;
 import com.warehouse.demo.exception.PianoNotFoundException;
@@ -48,6 +47,7 @@ public class PianoController {
     }
 
     //ok
+    @ApiOperation(value = "return all piano")
     @GetMapping(value = "/pianos")
     public ResponseEntity<List<PianoResponse>> getAllPiano() {
         return new ResponseEntity<>(

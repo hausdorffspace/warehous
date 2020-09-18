@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
 
 @RestController
 public class PurshaseController {
@@ -19,10 +18,9 @@ public class PurshaseController {
     @Autowired
     private PurshaseService purshaseService;
 
-    @PutMapping(value = "/sellPiano")
+    @PutMapping(value = "/sellPiano/{sku}")
     public ResponseEntity<PianoResponse> sellPiano(
             @PathVariable(name = "sku") String sku) {
-        System.out.println(sku);
         return new ResponseEntity<>(purshaseService.sellPiano(sku)
                 .orElseThrow(() -> new PianoNotFoundException(sku)),
                 HttpStatus.OK);

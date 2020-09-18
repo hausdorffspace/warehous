@@ -29,6 +29,7 @@ public class PurshaseService {
         if (Optional.ofNullable(pianoBySKU).isPresent()){
             Integer accountBalance = bankAccountRepository.getOne(1L).getAccountBallance();
             bankAccountRepository.updateBankAccount(accountBalance + pianoBySKU.getPrice());
+            pianoRepository.deletePianoWithSku(sku);
             return Optional.ofNullable(Mapper.mapPianoToPianoResponse(pianoBySKU));
         } else {
             return Optional.empty();
