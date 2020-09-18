@@ -16,7 +16,7 @@ public class Piano implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_id")
+    @Column(name = "piano_id")
     private Long id;
 
     private String name;

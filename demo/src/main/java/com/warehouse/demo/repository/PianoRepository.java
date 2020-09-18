@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,12 +19,23 @@ public interface PianoRepository extends JpaRepository<Piano, Long> {
     @Query(value = "SELECT * FROM piano As p WHERE p.model_of_piano=:modelOfPiano", nativeQuery = true)
     List<Piano> getAllPianoByModel(@Param("modelOfPiano") String model);
 
-    @Modifying(clearAutomatically = true)
-    @Query(value = "UPDATE p.price FROM piano WHERE p.sku=:sku", nativeQuery = true)
-    Piano updatePianoWithSku(@Param("sku") String sku);
 
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "UPDATE piano AS p SET p.price=:price  WHERE p.sku=:sku", nativeQuery = true)
+    Integer updatePianoWithSku(@Param("sku") String sku,@Param("price") Integer price);
+
+
+    @Transactional
     @Modifying(clearAutomatically = true)
     @Query(value = "DELETE FROM piano AS p WHERE p.sku=:sku", nativeQuery = true)
-    Piano deletePianoWithSku(@Param("sku") String sku);
+    Integer deletePianoWithSku(@Param("sku") String sku);
 
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "DELETE FROM piano AS p WHERE p.piano_id=:id",nativeQuery = true)
+    Integer deletePianoWithId(@Param("id") Long id);
+
+    @Query(value = "SELECT * FROM piano AS p WHERE p.sku=:sku",nativeQuery = true)
+    Piano getPianoBySKU(@Param("sku") String sku);
 }

@@ -61,12 +61,23 @@ public class PianoService {
         return Optional.ofNullable(pianoRepository.findAll());
     }
 
-    public Optional<Piano> updatePianoWithSku(String sku){
-        return  Optional.ofNullable(pianoRepository.updatePianoWithSku(sku));
+    public Optional<Piano> updatePianoWithSku(String sku, Integer price){
+        Integer isUpdate = pianoRepository.updatePianoWithSku(sku, price);
+        if (isUpdate == 1){
+            return Optional.ofNullable(pianoRepository.getPianoBySKU(sku));
+        } else {
+            return Optional.empty();
+        }
+
     }
 
     public Optional<Piano> deletePianoWithSku(String sku){
-        return Optional.ofNullable(pianoRepository.deletePianoWithSku(sku));
+        Integer isDelete = pianoRepository.deletePianoWithSku(sku);
+        if (isDelete == 1){
+            return Optional.ofNullable(pianoRepository.getPianoBySKU(sku));
+        }else {
+            return Optional.empty();
+        }
     }
 
     private ModelOfPiano modelChecker(ModelPianoRequest model) {
@@ -117,6 +128,7 @@ public class PianoService {
                         .length(pianoRequest.getDimension().getLength())
                         .build())
                 .SKU(pianoRequest.getSku())
+                .borrowed(false)
                 .modelOfPiano(modelChecker(pianoRequest.getModelOfPiano()))   // TODO message or description , add rescription in swagger
                 .producer(Producer.builder()
                         .companyName(pianoRequest.getProducer().getCompanyName())

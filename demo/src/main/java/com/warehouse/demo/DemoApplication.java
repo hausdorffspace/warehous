@@ -20,16 +20,15 @@ public class DemoApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
-
 	}
 
 
 	@Bean
 	public Docket get(){
-		return new Docket(DocumentationType.SWAGGER_2)
+		return new Docket(DocumentationType.SWAGGER_2)/*
 				.select()
 					.paths(PathSelectors.ant("/api/**"))
-				.build()
+				.build()*/
 				.apiInfo(returnApiInfo());
 	}
 
@@ -38,7 +37,7 @@ public class DemoApplication {
 		return apiInfoBuilder
 				.title("piano warehouse API")
 				.description("")
-				.contact(new Contact("Rafal", "jakis link","rafalantas96@gmail.com"))
+				.contact(new Contact("Rafal", "","rafalantas96@gmail.com"))
 				.version("1.00")
 				.build();
 	}

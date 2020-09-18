@@ -7,16 +7,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
 
+
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @WebMvcTest(PianoController.class)
@@ -25,26 +27,29 @@ class PianoControllerTest {
 
     @MockBean
     PianoService pianoService;
+
     @Autowired
     private MockMvc mockMvc;
 
     @Test
     void test() {
         try {
-            this.mockMvc.perform(get("/test"))
-                    .andExpect(print())
+            this.mockMvc.perform(get("/api/test"))
+                    .andDo(print())
                     .andExpect(status().isOk())
-                    .andExpect(content().json(
+                    .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$[0].test",is("test")));
+                    /*.andExpect(content().json(
                             "{" + "\n" + "\"name\": \"test\"" + "\n" +
                                     "}"
 
-                    ));
+                    ));*/
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    @Test
+    /*@Test
     void savePianoShouldReturnPianoFromService() {
         when(pianoService.save(any(PianoRequest.class)))
                 .thenReturn(Optional.ofNullable(PianoResponse.builder().build()));
@@ -52,12 +57,13 @@ class PianoControllerTest {
         try {
             this.mockMvc.perform(get("/save"))
                     .andDo(print())
+                    .andDo()
                     .andExpect(status().isOk())
                     .andExpect(content().json());
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     @Test
     void getPianoByName() {

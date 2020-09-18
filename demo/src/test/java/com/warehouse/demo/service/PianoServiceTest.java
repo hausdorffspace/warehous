@@ -4,50 +4,100 @@ import com.warehouse.demo.model.*;
 import com.warehouse.demo.model.request.*;
 import com.warehouse.demo.model.response.PianoResponse;
 import com.warehouse.demo.repository.PianoRepository;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doReturn;
 
 
-@RunWith(MockitoJUnitRunner.class)
+@SpringBootTest
 class PianoServiceTest {
 
-    @Mock
-    PianoRepository pianoRepository;
+    @Autowired
+    private PianoService pianoService;
 
-    @InjectMocks
-    PianoService pianoService;
-
+    @MockBean
+    private PianoRepository pianoRepository;
 
     @Test
+    @DisplayName("Test savePiano Succes")
     void whenSavePianoShouldReturnOptionalPianoResponse() {
-        //given
-        when(pianoRepository.save(createPiano())).thenReturn(createPiano());
-        //when
-        Optional<PianoResponse> save = pianoService.save(createPianoRequest());
-        //then
-        assertThat(save.get().getName()).isSameAs(createPiano().getName());
+        //Setup mock repository
+        Piano response = createPiano();
+        response.setId(1L);
+        Piano request = createPiano();
+
+        doReturn(response).when(pianoRepository).save(request);
+
+        //Execute the service call
+        Optional<PianoResponse> returnedPiano = pianoService.save(createPianoRequest());
+
+        //Assert the response
+        Assertions.assertNotNull(returnedPiano,"The saved piano should not be null");
+        Assertions.assertEquals(false,returnedPiano.get().getBorrowed());
+    }
+
+    @Test
+    void testGetPianioByName() {
+        //Setup mock repository
+        Piano piano = createPiano();
+        doReturn(piano).when(pianoRepository).getPianoByName(piano.getName());
+
+        //Execute the service call
+        Piano returnedPiano = pianoService.getPianioByName(piano.getName()).get();
+        
+        //assert the response
+
+        Assertions.assertNotNull(returnedPiano,"returned piano should not be null");
+        Assertions.assertEquals("testName",returnedPiano.getName());
+    }
+
+    @Test
+    void testGetAllPianoByModel(){
+        //setup mock repository
+        Piano piano = createPiano();
+        Piano piano1 = createPiano();
+        String model = "B";
+        doReturn(Arrays.asList(piano,piano1)).when(pianoRepository).getAllPianoByModel(model);
+
+        //Execute the service call
+        List<Piano> response = pianoService.getAllPianoByModel(model).get();
+
+        //Assert the response
+        response.forEach(p-> Assertions.assertSame(ModelOfPiano.GRAND_PIANO_B_211,p.getModelOfPiano()));
+        Assertions.assertEquals(2,response.size());
 
     }
 
-    @Test()
-    void getPianioByName() {
-        //given
+    @Test
+    void testGetAllPianoShouldReturnZeroElements(){
+        //setup mock repository
+        doReturn(Collections.emptyList()).when(pianoRepository).findAll();
 
-        String name = "testName";
-        //when
-        Piano piano1 = pianoService.getPianioByName(name).get();
-        //then
+        //execute the service call
+        List<Piano> response = pianoService.getAllPiano().get();
 
+        //assert the response
+        Assertions.assertEquals(0,response.size());
     }
+
+    @Test
+    void testGetAllPiano(){
+        Piano piano = createPiano();
+        Piano piano1 = createPiano();
+        doReturn(Arrays.asList(piano,piano1)).when(pianoRepository).findAll();
+    }
+
 
 
     private PianoRequest createPianoRequest() {
