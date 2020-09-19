@@ -12,17 +12,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.function.Consumer;
 
 @Service
 public class PurshaseService {
 
-    @Autowired
     private PianoRepository pianoRepository;
 
-    @Autowired
     private BankAccountRepository bankAccountRepository;
 
+    @Autowired
+    public PurshaseService(PianoRepository pianoRepository, BankAccountRepository bankAccountRepository) {
+        this.pianoRepository = pianoRepository;
+        this.bankAccountRepository = bankAccountRepository;
+    }
 
     public final Optional<PianoResponse> sellPiano(String sku) {
         Piano pianoBySKU = pianoRepository.getPianoBySKU(sku);

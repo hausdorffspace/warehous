@@ -8,7 +8,7 @@ import com.warehouse.demo.model.response.WarehouseResponse;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Mapper {
+public final class Mapper {
 
     private Mapper() {
     }

@@ -20,8 +20,12 @@ import java.util.Random;
 @Service
 public class PianoService {
 
-    @Autowired
     private PianoRepository pianoRepository;
+
+    @Autowired
+    public PianoService(PianoRepository pianoRepository) {
+        this.pianoRepository = pianoRepository;
+    }
 
     public Optional<PianoResponse> save(PianoRequest pianoRequest) {
 

@@ -15,8 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PurshaseController {
 
-    @Autowired
     private PurshaseService purshaseService;
+
+    @Autowired
+    public PurshaseController(PurshaseService purshaseService) {
+        this.purshaseService = purshaseService;
+    }
 
     @PutMapping(value = "/sellPiano/{sku}")
     public ResponseEntity<PianoResponse> sellPiano(
