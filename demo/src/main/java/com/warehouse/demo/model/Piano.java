@@ -4,6 +4,7 @@ package com.warehouse.demo.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Setter
@@ -11,11 +12,11 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Product {
+public class Piano implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_id")
+    @Column(name = "piano_id")
     private Long id;
 
     private String name;
@@ -31,11 +32,12 @@ public class Product {
     @JoinColumn(name = "dimension_id")
     private Dimension dimension;
 
+    @Column(unique = true)
     private String SKU;
 
-    @Enumerated(EnumType.ORDINAL)
-    @Column(name = "type_of_product")
-    private TypeProduct typeOfProduct;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "model_of_piano")
+    private ModelOfPiano modelOfPiano;
 
     @ManyToOne(
             cascade = CascadeType.ALL
@@ -45,8 +47,10 @@ public class Product {
 
     @ManyToOne(
             cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY
+            fetch = FetchType.EAGER
     )
     @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;
+
+    private Boolean borrowed;
 }

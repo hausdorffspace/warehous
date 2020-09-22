@@ -1,10 +1,7 @@
 package com.warehouse.demo.model.request;
 
-import com.warehouse.demo.model.TypeProduct;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.warehouse.demo.model.ModelOfPiano;
+import lombok.*;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -15,7 +12,8 @@ import javax.validation.constraints.NotNull;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductRequest {
+@Builder
+public class PianoRequest {
     @NotBlank
     private String name;
 
@@ -28,11 +26,9 @@ public class ProductRequest {
     @NotNull
     private DimensionRequest dimension;
 
-    @NotBlank
-    private String sku;
-
+    //expect S, M, O, A, B, C, D
     @NotNull
-    private TypeProduct typeOfProduct;
+    private ModelPianoRequest modelOfPiano;
 
     @NotNull
     private ProducerRequest producer;

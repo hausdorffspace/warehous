@@ -1,4 +1,4 @@
-package com.warehouse.demo.model.request;
+package com.warehouse.demo.model.response;
 
 
 import lombok.*;
@@ -8,7 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProducerRequest {
-
+public class ProducerResponse {
     private String companyName;
 }

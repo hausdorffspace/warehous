@@ -3,6 +3,7 @@ package com.warehouse.demo.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 
 @Getter
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Dimension {
+public class Dimension implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,4 +22,6 @@ public class Dimension {
     private Integer height;
 
     private Integer width;
+
+    private Integer length;
 }

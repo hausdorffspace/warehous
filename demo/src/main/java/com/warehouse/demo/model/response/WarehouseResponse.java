@@ -1,14 +1,14 @@
-package com.warehouse.demo.model.request;
+package com.warehouse.demo.model.response;
 
 
 import lombok.*;
 
-@Setter
 @Getter
-@AllArgsConstructor
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class WarehouseRequest {
+public class WarehouseResponse {
 
     private String description;
 

@@ -3,6 +3,7 @@ package com.warehouse.demo.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @NoArgsConstructor
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @Setter
 @Getter
 @Builder
-public class Producer {
+public class Producer implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
