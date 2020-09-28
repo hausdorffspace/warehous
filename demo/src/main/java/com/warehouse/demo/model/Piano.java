@@ -25,6 +25,8 @@ public class Piano implements Serializable {
 
     private Integer price;
 
+    private Integer monthlyFee;
+
     @OneToOne(
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER  //to always fetch the data
