@@ -64,7 +64,6 @@ public class PurshaseService {
         if (Objects.nonNull(pianoBySkuWhichIsNotBorrowed)) {
             Piano borrowedPiano = pianoRepository.updatePianoWithSku(sku, Boolean.TRUE);
             Timer timer = new Timer();
-            timer.schedule();
             borrowedPianoRepository.save(BorrowedPiano.builder()
                     .borrowedPiano(borrowedPiano)
                     .priceForOneDay(calculateDailyRent(borrowedPiano.getPrice()))
