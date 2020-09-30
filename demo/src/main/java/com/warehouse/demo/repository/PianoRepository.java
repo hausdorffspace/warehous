@@ -23,7 +23,7 @@ public interface PianoRepository extends JpaRepository<Piano, Long> {
     @Transactional
     @Modifying(clearAutomatically = true)
     @Query(value = "UPDATE piano AS p SET p.price=:price  WHERE p.sku=:sku", nativeQuery = true)
-    Integer updatePianoWithSku(@Param("sku") String sku,@Param("price") Integer price);
+    Integer updatePianoWithSku(@Param("sku") String sku, @Param("price") Integer price);
 
 
     @Transactional
@@ -33,12 +33,20 @@ public interface PianoRepository extends JpaRepository<Piano, Long> {
 
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query(value = "DELETE FROM piano WHERE piano_id=:id",nativeQuery = true)
+    @Query(value = "DELETE FROM piano WHERE piano_id=:id", nativeQuery = true)
     Integer deletePianoWithId(@Param("id") Long id);
 
-    @Query(value = "SELECT * FROM piano AS p WHERE p.sku=:sku",nativeQuery = true)
+    @Query(value = "SELECT * FROM piano AS p WHERE p.sku=:sku", nativeQuery = true)
     Piano getPianoBySKU(@Param("sku") String sku);
 
-    @Query(value = "SELECT * FROM piano AS p WHERE p.piano_id=:id",nativeQuery = true)
+    @Query(value = "SELECT * FROM piano AS p WHERE p.piano_id=:id", nativeQuery = true)
     Piano getPianoById(Long id);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "UPDATE piano AS p SET p.borrowed=:borrowed WHERE p.sku=:sku", nativeQuery = true)
+    Piano updatePianoWithSku(@Param("sku") String SKU, @Param("borrowed") Boolean borrowed);
+
+    @Query(value = "SELECT * FROM piano AS p WHERE p.sku=:sku AND p.borrowed != 1",nativeQuery = true)
+    Piano getPianoBySkuWhichIsNotBorrowed(@Param("sku") String sku);
 }

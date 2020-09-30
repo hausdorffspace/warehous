@@ -37,7 +37,7 @@ public class DemoApplication {
 		return apiInfoBuilder
 				.title("piano warehouse API")
 				.description("")
-				.contact(new Contact("Rafal", "","rafalantas96@gmail.com"))
+				.contact(new Contact("Rafal", "","rafal.antas96@gmail.com"))
 				.version("1.00")
 				.build();
 	}

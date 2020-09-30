@@ -4,6 +4,8 @@ import com.warehouse.demo.model.*;
 import com.warehouse.demo.model.request.*;
 import com.warehouse.demo.model.response.PianoResponse;
 import com.warehouse.demo.repository.PianoRepository;
+import com.warehouse.demo.utility.Mapper;
+import com.warehouse.demo.utility.ModelChecker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 
 
@@ -34,10 +37,8 @@ class PianoServiceTest {
     void whenSavePianoShouldReturnOptionalPianoResponse() {
         //Setup mock repository
         Piano response = createPiano();
-        response.setId(1L);
-        Piano request = createPiano();
 
-        doReturn(response).when(pianoRepository).save(request);
+        doReturn(response).when(pianoRepository).save(any());
 
         //Execute the service call
         Optional<PianoResponse> returnedPiano = pianoService.save(createPianoRequest());
@@ -62,13 +63,16 @@ class PianoServiceTest {
         Assertions.assertEquals("testName",returnedPiano.getName());
     }
 
+
     @Test
     void testGetAllPianoByModel(){
         //setup mock repository
         Piano piano = createPiano();
+        piano.setId(1L);
         Piano piano1 = createPiano();
+        piano1.setId(2L);
         String model = "B";
-        doReturn(Arrays.asList(piano,piano1)).when(pianoRepository).getAllPianoByModel(model);
+        doReturn(Arrays.asList(piano,piano1)).when(pianoRepository).getAllPianoByModel(any());
 
         //Execute the service call
         List<Piano> response = pianoService.getAllPianoByModel(model).get();
@@ -124,6 +128,7 @@ class PianoServiceTest {
 
     private Piano createPiano() {
         return Piano.builder()
+                .id(1L)
                 .name("testName")
                 .price(1)
                 .SKU("QWERTY")
