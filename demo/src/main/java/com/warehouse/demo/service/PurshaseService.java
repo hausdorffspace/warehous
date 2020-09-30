@@ -10,6 +10,7 @@ import com.warehouse.demo.repository.PianoRepository;
 import com.warehouse.demo.repository.RentierRepository;
 import com.warehouse.demo.utility.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import javax.xml.crypto.Data;
@@ -18,6 +19,7 @@ import java.time.Period;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Timer;
+import java.util.TimerTask;
 
 @Service
 public class PurshaseService {
@@ -61,6 +63,8 @@ public class PurshaseService {
         Piano pianoBySkuWhichIsNotBorrowed = pianoRepository.getPianoBySkuWhichIsNotBorrowed(sku);
         if (Objects.nonNull(pianoBySkuWhichIsNotBorrowed)) {
             Piano borrowedPiano = pianoRepository.updatePianoWithSku(sku, Boolean.TRUE);
+            Timer timer = new Timer();
+            timer.schedule();
             borrowedPianoRepository.save(BorrowedPiano.builder()
                     .borrowedPiano(borrowedPiano)
                     .priceForOneDay(calculateDailyRent(borrowedPiano.getPrice()))

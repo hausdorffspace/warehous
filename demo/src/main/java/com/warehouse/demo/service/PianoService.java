@@ -2,13 +2,14 @@ package com.warehouse.demo.service;
 
 
 import com.warehouse.demo.model.*;
-import com.warehouse.demo.model.request.ModelPianoRequest;
 import com.warehouse.demo.model.request.PianoRequest;
 import com.warehouse.demo.model.response.DimensionResponse;
 import com.warehouse.demo.model.response.PianoResponse;
 import com.warehouse.demo.model.response.ProducerResponse;
 import com.warehouse.demo.model.response.WarehouseResponse;
 import com.warehouse.demo.repository.PianoRepository;
+import com.warehouse.demo.utility.Mapper;
+import com.warehouse.demo.utility.ModelChecker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,9 +23,15 @@ public class PianoService {
 
     private PianoRepository pianoRepository;
 
+    private ModelChecker moddelChecker;
+
+    private Mapper mapper;
+
     @Autowired
-    public PianoService(PianoRepository pianoRepository) {
+    public PianoService(PianoRepository pianoRepository, ModelChecker moddelChecker, Mapper mapper) {
         this.pianoRepository = pianoRepository;
+        this.moddelChecker = moddelChecker;
+        this.mapper = mapper;
     }
 
     public Optional<PianoResponse> save(PianoRequest pianoRequest) {
@@ -59,7 +66,7 @@ public class PianoService {
     }
 
     public Optional<List<Piano>> getAllPianoByModel(String modelOfPiano) {
-        return Optional.ofNullable(pianoRepository.getAllPianoByModel(mapperModelOfPiano(modelOfPiano)));
+        return Optional.ofNullable(pianoRepository.getAllPianoByModel(mapper.mapperModelOfPiano(modelOfPiano)));
     }
 
     public Optional<List<Piano>> getAllPiano() {
@@ -95,42 +102,7 @@ public class PianoService {
         }
     }
 
-    private ModelOfPiano modelChecker(ModelPianoRequest model) {
-        ModelOfPiano modelOfPiano;
-        switch (model) {
-            case A:
-                modelOfPiano = ModelOfPiano.GRAND_PIANO_A_188;
-                break;
-            case B:
-                modelOfPiano = ModelOfPiano.GRAND_PIANO_B_211;
-                break;
-            case C:
-                modelOfPiano = ModelOfPiano.GRAND_PIANO_C_227;
-                break;
-            case D:
-                modelOfPiano = ModelOfPiano.GRAND_PIANO_D_274;
-                break;
-            case M:
-                modelOfPiano = ModelOfPiano.GRAND_PIANO_M_170;
-                break;
-            case O:
-                modelOfPiano = ModelOfPiano.GRAND_PIANO_O_180;
-                break;
-            case S:
-                modelOfPiano = ModelOfPiano.GRAND_PIANO_S_155;
-                break;
-            case K:
-                modelOfPiano = ModelOfPiano.UPRIGHT_PIANO_K_132;
-                break;
-            case V:
-                modelOfPiano = ModelOfPiano.UPRIGHT_PIANO_V_125;
-                break;
-            default:
-                modelOfPiano = ModelOfPiano.GRAND_PIANO_B_211;
-                break;
-        }
-        return modelOfPiano;
-    }
+
 
     private Piano mapPianoRequestToPiano(PianoRequest pianoRequest) {
         return Piano.builder()
@@ -144,7 +116,7 @@ public class PianoService {
                         .build())
                 .SKU(generateSKU())
                 .borrowed(false)
-                .modelOfPiano(modelChecker(pianoRequest.getModelOfPiano()))   // TODO message or description , add rescription in swagger
+                .modelOfPiano(moddelChecker.modelChecker(pianoRequest.getModelOfPiano()))   // TODO message or description , add rescription in swagger
                 .producer(Producer.builder()
                         .companyName(pianoRequest.getProducer().getCompanyName())
                         .build())
@@ -156,42 +128,7 @@ public class PianoService {
     }
 
 
-    private String mapperModelOfPiano(String modelOfPiano) {
-        switch (modelOfPiano) {
 
-            case "A":
-                modelOfPiano = ModelOfPiano.GRAND_PIANO_A_188.name();
-                break;
-            case "B":
-                modelOfPiano = ModelOfPiano.GRAND_PIANO_B_211.name();
-                break;
-            case "C":
-                modelOfPiano = ModelOfPiano.GRAND_PIANO_C_227.name();
-                break;
-            case "D":
-                modelOfPiano = ModelOfPiano.GRAND_PIANO_D_274.name();
-                break;
-            case "M":
-                modelOfPiano = ModelOfPiano.GRAND_PIANO_M_170.name();
-                break;
-            case "O":
-                modelOfPiano = ModelOfPiano.GRAND_PIANO_O_180.name();
-                break;
-            case "S":
-                modelOfPiano = ModelOfPiano.GRAND_PIANO_S_155.name();
-                break;
-            case "K":
-                modelOfPiano = ModelOfPiano.UPRIGHT_PIANO_K_132.name();
-                break;
-            case "V":
-                modelOfPiano = ModelOfPiano.UPRIGHT_PIANO_V_125.name();
-                break;
-            default:
-                modelOfPiano = ModelOfPiano.GRAND_PIANO_B_211.name();
-                break;
-        }
-        return modelOfPiano;
-    }
 
     private String generateSKU() {
         int leftLimit = 97;
