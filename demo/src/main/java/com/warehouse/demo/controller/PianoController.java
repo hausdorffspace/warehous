@@ -36,8 +36,9 @@ public class PianoController {
     //ok
     @PostMapping(value = "/save")
     public ResponseEntity<PianoResponse> savePiano(@Valid @RequestBody PianoRequest pianoRequest) {
-        PianoResponse pianoResponse = pianoService.save(pianoRequest).orElseThrow(() -> new CannotSavePianoToTheDatabase(pianoRequest));
-        return new ResponseEntity<>(pianoResponse, HttpStatus.CREATED);
+        return new ResponseEntity<>(
+                mapOptionalPianoToOptionalResponsePiano(pianoService.save(pianoRequest)).orElseThrow(()-> new CannotSavePianoToTheDatabase(pianoRequest)),
+                HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/piano/{name}")
@@ -80,7 +81,7 @@ public class PianoController {
             @PathVariable(name = "price") Integer price
     ) {
         return new ResponseEntity<>(
-                mapOptionalPianoToOptionalResponsePiano(pianoService.updatePianoWithSku(sku, price))
+                mapOptionalPianoToOptionalResponsePiano(pianoService.updatePianoPriceWithSku(sku, price))
                         .orElseThrow(() -> new PianoNotFoundException(sku)),
                 HttpStatus.OK);
     }

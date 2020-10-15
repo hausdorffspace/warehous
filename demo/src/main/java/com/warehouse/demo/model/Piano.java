@@ -27,6 +27,8 @@ public class Piano implements Serializable {
 
     private Integer monthlyFee;
 
+    private Boolean borrowed;
+
     @OneToOne(
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER  //to always fetch the data
@@ -34,7 +36,7 @@ public class Piano implements Serializable {
     @JoinColumn(name = "dimension_id")
     private Dimension dimension;
 
-    @Column(unique = true)
+    @Column(unique = true, length = 20)
     private String SKU;
 
     @Enumerated(EnumType.STRING)
@@ -53,6 +55,4 @@ public class Piano implements Serializable {
     )
     @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;
-
-    private Boolean borrowed;
 }

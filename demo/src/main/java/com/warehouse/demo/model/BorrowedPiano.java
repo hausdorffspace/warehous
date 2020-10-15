@@ -29,5 +29,5 @@ public class BorrowedPiano implements Serializable {
 
     private Period totalTimeForRentalPeriod;
 
-    private Rentier rentier;
+    private Customer customer;
 }

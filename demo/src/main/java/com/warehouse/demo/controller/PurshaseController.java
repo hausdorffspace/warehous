@@ -2,6 +2,7 @@ package com.warehouse.demo.controller;
 
 
 import com.warehouse.demo.exception.PianoNotFoundException;
+import com.warehouse.demo.model.Piano;
 import com.warehouse.demo.model.response.PianoResponse;
 import com.warehouse.demo.service.PurshaseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class PurshaseController {
     }
 
     @PutMapping(value = "/sellPiano/{sku}")
-    public ResponseEntity<PianoResponse> sellPiano(
+    public ResponseEntity<Piano> sellPiano(
             @PathVariable(name = "sku") String sku) {
         return new ResponseEntity<>(purshaseService.sellPiano(sku)
                 .orElseThrow(() -> new PianoNotFoundException(sku)),
@@ -33,10 +34,9 @@ public class PurshaseController {
 
     /*public ResponseEntity<?> borrowPiano(
             @RequestBody
-            ){
-        purshaseService.borrowPianoWithSKUForThePeriod(sku,period);
-    }*/
+            ) {
 
+    }*/
 
 
 }

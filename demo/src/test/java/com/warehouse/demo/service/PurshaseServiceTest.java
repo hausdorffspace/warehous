@@ -51,7 +51,7 @@ class PurshaseServiceTest {
         doReturn(price).when(bankAccountRepository).updateBankAccount(price);
 
         //execute the service call
-        Optional<PianoResponse> pianoResponse = purshaseService.sellPiano(sku);
+        Optional<Piano> pianoResponse = purshaseService.sellPiano(sku);
 
         //assert the response
         assertNotNull(pianoResponse.get(),"retrived piano should not be null");

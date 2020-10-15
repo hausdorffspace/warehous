@@ -4,7 +4,7 @@ INSERT INTO warehouse(description,location) VALUES ('Chicago piano','Chicago');
 
 INSERT INTO producer(company_name) VALUES ('Stainway&Sons');
 INSERT INTO producer(company_name) VALUES ('Bechstein');
-INSERT INTO producer(company_name) VALUES ('Bosendorf');
+INSERT INTO producer(company_name) VALUES ('Bosendorfer');
 
 
 INSERT INTO dimension(height,length,width) VALUES (150,274,160);

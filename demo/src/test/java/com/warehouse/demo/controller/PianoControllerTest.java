@@ -1,8 +1,12 @@
 package com.warehouse.demo.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.warehouse.demo.model.*;
 import com.warehouse.demo.model.request.PianoRequest;
+import com.warehouse.demo.model.response.DimensionResponse;
 import com.warehouse.demo.model.response.PianoResponse;
+import com.warehouse.demo.model.response.ProducerResponse;
+import com.warehouse.demo.model.response.WarehouseResponse;
 import com.warehouse.demo.service.PianoService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +18,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
 import java.util.Optional;
 
-
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -43,31 +47,73 @@ class PianoControllerTest {
                     .andExpect(status().isOk())
                     .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$[0].test",is("test")));
-                    /*.andExpect(content().json(
-                            "{" + "\n" + "\"name\": \"test\"" + "\n" +
-                                    "}"
-
-                    ));*/
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    /*@Test
+    @Test
     void savePianoShouldReturnPianoFromService() {
+
+        PianoResponse returnerPiano = PianoResponse.builder()
+                .SKU("QWERTY")
+                .name("qwerty")
+                .id(1L)
+                .modelOfPiano(ModelOfPiano.GRAND_PIANO_C_227)
+                .weight(400)
+                .price(100000)
+                .producer(ProducerResponse.builder()
+                        .companyName("Stainway")
+                        .build())
+                .borrowed(false)
+                .dimension(DimensionResponse.builder()
+                        .height(1)
+                        .width(1)
+                        .Length(1)
+                        .build())
+                .warehouse(WarehouseResponse.builder()
+                        .description("desc")
+                        .location("Krakow")
+                        .build())
+                .build();
+
+
         when(pianoService.save(any(PianoRequest.class)))
-                .thenReturn(Optional.ofNullable(PianoResponse.builder().build()));
+                .thenReturn(Optional.ofNullable(Piano.builder()
+                        .SKU("QWERTY")
+                        .name("qwerty")
+                        .id(1L)
+                        .modelOfPiano(ModelOfPiano.GRAND_PIANO_C_227)
+                        .weight(400)
+                        .price(100000)
+                        .producer(Producer.builder()
+                                .companyName("Stainway")
+                                .build())
+                        .borrowed(false)
+                        .dimension(Dimension.builder()
+                                .height(1)
+                                .width(1)
+                                .length(1)
+                                .build())
+                        .warehouse(Warehouse.builder()
+                                .description("desc")
+                                .location("Krakow")
+                                .build())
+                        .build()));
 
         try {
-            this.mockMvc.perform(get("/save"))
+            this.mockMvc.perform(post("/save")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(asJsonString(returnerPiano)))
                     .andDo(print())
-                    .andDo()
-                    .andExpect(status().isOk())
-                    .andExpect(content().json());
+                    .andExpect(status().isCreated())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$", hasSize(1)))
+                    .andExpect(jsonPath("$[0].SKU", is("QWERTY")));
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }*/
+    }
 
     @Test
     void getAllPianoTest(){
@@ -91,10 +137,25 @@ class PianoControllerTest {
 
     @Test
     void getPianoByName() {
+        when(pianoService.getPianioByName(any()))
+                .thenReturn(Optional.ofNullable(
+                        Piano.builder()
+                                .SKU("SKU")
+                                .name("stainway")
+                                .build()));
+        try {
+            mockMvc.perform(get("/piano/{name}","stainway"))
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$[0].sku",is("SKU")));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     void getAllPianoByModel() {
+        when(pianoService.getAllPianoByModel("P"));
     }
 
     @Test
@@ -127,5 +188,13 @@ class PianoControllerTest {
                         .description("description")
                         .build())
                 .build();
+    }
+
+    static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

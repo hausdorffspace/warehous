@@ -3,13 +3,8 @@ package com.warehouse.demo.service;
 
 import com.warehouse.demo.model.*;
 import com.warehouse.demo.model.request.PianoRequest;
-import com.warehouse.demo.model.response.DimensionResponse;
-import com.warehouse.demo.model.response.PianoResponse;
-import com.warehouse.demo.model.response.ProducerResponse;
-import com.warehouse.demo.model.response.WarehouseResponse;
 import com.warehouse.demo.repository.PianoRepository;
 import com.warehouse.demo.utility.Mapper;
-import com.warehouse.demo.utility.ModelChecker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,42 +18,16 @@ public class PianoService {
 
     private PianoRepository pianoRepository;
 
-    private ModelChecker moddelChecker;
-
     private Mapper mapper;
 
     @Autowired
-    public PianoService(PianoRepository pianoRepository, ModelChecker moddelChecker, Mapper mapper) {
+    public PianoService(PianoRepository pianoRepository, Mapper mapper) {
         this.pianoRepository = pianoRepository;
-        this.moddelChecker = moddelChecker;
         this.mapper = mapper;
     }
 
-    public Optional<PianoResponse> save(PianoRequest pianoRequest) {
-
-        Piano savePiano = pianoRepository.save(mapPianoRequestToPiano(pianoRequest));
-
-        return Optional.ofNullable(PianoResponse.builder()
-                .id(savePiano.getId())
-                .name(savePiano.getName())
-                .price(savePiano.getPrice())
-                .weight(savePiano.getWeight())
-                .SKU(savePiano.getSKU())
-                .borrowed(savePiano.getBorrowed())
-                .dimension(DimensionResponse.builder()
-                        .height(savePiano.getDimension().getHeight())
-                        .width(savePiano.getDimension().getWidth())
-                        .Length(savePiano.getDimension().getLength())
-                        .build())
-                .modelOfPiano(savePiano.getModelOfPiano())
-                .producer(ProducerResponse.builder()
-                        .companyName(savePiano.getProducer().getCompanyName())
-                        .build())
-                .warehouse(WarehouseResponse.builder()
-                        .description(savePiano.getWarehouse().getDescription())
-                        .location(savePiano.getWarehouse().getLocation())
-                        .build())
-                .build());
+    public Optional<Piano> save(PianoRequest pianoRequest) {
+        return Optional.ofNullable(pianoRepository.save(mapPianoRequestToPiano(pianoRequest)));
     }
 
     public Optional<Piano> getPianioByName(String name) {
@@ -73,8 +42,8 @@ public class PianoService {
         return Optional.ofNullable(pianoRepository.findAll());
     }
 
-    public Optional<Piano> updatePianoWithSku(String sku, Integer price) {
-        Integer isUpdate = pianoRepository.updatePianoWithSku(sku, price);
+    public Optional<Piano> updatePianoPriceWithSku(String sku, Integer price) {
+        Integer isUpdate = pianoRepository.updatePianoPriceWithSku(sku, price);
         if (isUpdate == 1) {
             return Optional.ofNullable(pianoRepository.getPianoBySKU(sku));
         } else {
@@ -103,7 +72,6 @@ public class PianoService {
     }
 
 
-
     private Piano mapPianoRequestToPiano(PianoRequest pianoRequest) {
         return Piano.builder()
                 .name(pianoRequest.getName())
@@ -116,7 +84,7 @@ public class PianoService {
                         .build())
                 .SKU(generateSKU())
                 .borrowed(false)
-                .modelOfPiano(moddelChecker.modelChecker(pianoRequest.getModelOfPiano()))   // TODO message or description , add rescription in swagger
+                .modelOfPiano(pianoRequest.getModelOfPiano())
                 .producer(Producer.builder()
                         .companyName(pianoRequest.getProducer().getCompanyName())
                         .build())
@@ -126,8 +94,6 @@ public class PianoService {
                         .build())
                 .build();
     }
-
-
 
 
     private String generateSKU() {
