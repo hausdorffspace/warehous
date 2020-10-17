@@ -44,7 +44,7 @@ public class PurshaseService {
     }
 
 
-    //what if piano is borrowed??? !!!
+    //customer ?  how to fetch the metadata about customer?
     public final Optional<Piano> sellPiano(String sku) {
         Optional<Piano> optionalPianoBySku = Optional.ofNullable(pianoRepository.getPianoBySkuWhichIsNotBorrowed(sku));  //get the piano which isn't borrowed
         if (optionalPianoBySku.isPresent()) {   //check if the piano is avaliable
@@ -72,30 +72,35 @@ public class PurshaseService {
     /*
      * the price for 1 month is equals 1% of basic price piano
      * */
-    public void borrowPianoWithSKUForThePeriod(String sku, Period period) {
-        Piano pianoBySkuWhichIsNotBorrowed = pianoRepository.getPianoBySkuWhichIsNotBorrowed(sku);
-        if (Objects.nonNull(pianoBySkuWhichIsNotBorrowed)) {
-            Piano borrowedPiano = pianoRepository.updatePianoBorrowedWithSku(sku, Boolean.TRUE);
-            Timer timer = new Timer();
-            TimerTastImpl timerTast = new TimerTastImpl();
-            timer.schedule( timerTast,10000);  //it will work after 10[s]
-            borrowedPianoRepository.save(BorrowedPiano.builder()
-                    .borrowedPiano(borrowedPiano)
-                    .priceForOneDay(calculateDailyRent(borrowedPiano.getPrice()))
-                    .priceForTheEntireRentalPeriod(calculatePriceForEntirePeriod(period))
-                    .build()
-            );
+    public Optional<Piano> borrowPianoWithSKUForThePeriod(String sku, Long period, String addressEmail) {
+
+        //condition that confirm email activation link
+        if (true) {
+            Integer isUpdate = pianoRepository.updatePianoBorrowedWithSkuIfBorrowedIsFalse(sku);
+            if (isUpdate == 1) {
+                Piano borrowedPiano = pianoRepository.getPianoBySKU(sku);
+                borrowedPianoRepository.save(BorrowedPiano.builder()
+                        .borrowedPiano(borrowedPiano)
+                        .priceForOneMonth(calculateMonthlyRent(borrowedPiano.getPrice())) //todo
+                        .priceForTheEntireRentalPeriod(calculatePriceForEntirePeriod(period, calculateMonthlyRent(borrowedPiano.getPrice())))
+                        .build());
+                Timer timer = new Timer();
+                timer.schedule(new TimerTastImpl(addressEmail), 10000);  //it will work after 10[s]
+
+                return Optional.ofNullable(borrowedPiano);
+            } else {
+                return Optional.empty();
+            }
+        } else {
+            return Optional.empty();
         }
-/*
-        Timer timer = new Timer();
-        timer.*/
     }
 
-    private Integer calculatePriceForEntirePeriod(Period period) {
-        return null;
+    private Double calculatePriceForEntirePeriod(Long period, Double monthlyFee) {
+        return Math.toIntExact(period) * monthlyFee;
     }
 
-    private Double calculateDailyRent(Integer borrowedPianoPrice) {
-        return borrowedPianoPrice * 0.01;
+    private Double calculateMonthlyRent(Integer priceOfThePiano) {
+        return priceOfThePiano * 0.01;
     }
 }

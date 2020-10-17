@@ -50,4 +50,8 @@ public interface PianoRepository extends JpaRepository<Piano, Long> {
     @Query(value = "SELECT * FROM piano AS p WHERE p.sku=:sku AND p.borrowed != 1",nativeQuery = true)
     Piano getPianoBySkuWhichIsNotBorrowed(@Param("sku") String sku);
 
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "UPDATE piano AS p SET p.borrowed=TRUE WHERE p.sku=:sku AND p.borrowed=FALSE", nativeQuery = true)
+    Integer updatePianoBorrowedWithSkuIfBorrowedIsFalse(@Param("sku") String sku);
 }

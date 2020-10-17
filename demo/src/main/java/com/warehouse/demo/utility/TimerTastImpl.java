@@ -1,5 +1,6 @@
 package com.warehouse.demo.utility;
 
+import com.warehouse.demo.service.EmailSenderService;
 import org.springframework.stereotype.Component;
 
 import java.util.TimerTask;
@@ -8,10 +9,12 @@ import java.util.TimerTask;
 @Component
 public class TimerTastImpl extends TimerTask {
 
-    private String name;
+    private String addressEmail;
 
-    public void setName(String name) {
-        this.name = name;
+    private EmailSenderService emailSenderService;
+
+    public TimerTastImpl(String addressEmail) {
+        this.addressEmail = addressEmail;
     }
 
     @Override

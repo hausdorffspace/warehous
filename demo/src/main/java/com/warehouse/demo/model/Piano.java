@@ -25,8 +25,6 @@ public class Piano implements Serializable {
 
     private Integer price;
 
-    private Integer monthlyFee;
-
     private Boolean borrowed;
 
     @OneToOne(

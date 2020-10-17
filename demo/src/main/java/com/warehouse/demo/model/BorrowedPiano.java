@@ -23,11 +23,11 @@ public class BorrowedPiano implements Serializable {
     @JoinColumn(name = "piano_id")
     private Piano borrowedPiano;
 
-    private Integer priceForTheEntireRentalPeriod;
+    private Double priceForTheEntireRentalPeriod;
 
-    private Double priceForOneDay;
+    private Double priceForOneMonth;
 
-    private Period totalTimeForRentalPeriod;
+    private Long totalTimeForRentalPeriod;
 
     private Customer customer;
 }

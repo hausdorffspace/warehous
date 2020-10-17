@@ -11,6 +11,7 @@ import com.warehouse.demo.model.response.PianoResponse;
 import com.warehouse.demo.model.response.ProducerResponse;
 import com.warehouse.demo.model.response.WarehouseResponse;
 import com.warehouse.demo.service.PianoService;
+import com.warehouse.demo.utility.PianoMapper;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,8 +29,11 @@ public class PianoController {
 
     private PianoService pianoService;
 
+    private PianoMapper pianoMapper;
+
     @Autowired
-    public PianoController(PianoService pianoService) {
+    public PianoController(PianoService pianoService, PianoMapper pianoMapper) {
+        this.pianoMapper = pianoMapper;
         this.pianoService = pianoService;
     }
 
@@ -37,14 +41,13 @@ public class PianoController {
     @PostMapping(value = "/save")
     public ResponseEntity<PianoResponse> savePiano(@Valid @RequestBody PianoRequest pianoRequest) {
         return new ResponseEntity<>(
-                mapOptionalPianoToOptionalResponsePiano(pianoService.save(pianoRequest)).orElseThrow(()-> new CannotSavePianoToTheDatabase(pianoRequest)),
+                pianoMapper.mapOptionalPianoToOptionalResponsePiano(pianoService.save(pianoRequest)).orElseThrow(()-> new CannotSavePianoToTheDatabase(pianoRequest)),
                 HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/piano/{name}")
     public ResponseEntity<PianoResponse> getPianoByName(@PathVariable(name = "name") String name) {
-        Piano pianoByName = pianoService.getPianioByName(name).orElseThrow(() -> new PianoNotFoundException(name));
-        return new ResponseEntity<>(mapPianoToResponsePiano(pianoByName), HttpStatus.OK);
+        return new ResponseEntity<>(pianoMapper.mapPianoToResponsePiano(pianoService.getPianioByName(name).orElseThrow(() -> new PianoNotFoundException(name))), HttpStatus.OK);
     }
 
     //ok
@@ -52,7 +55,7 @@ public class PianoController {
     @GetMapping(value = "/pianos")
     public ResponseEntity<List<PianoResponse>> getAllPiano() {
         return new ResponseEntity<>(
-                mapListOfPianoToListOfPianoResponse(pianoService.getAllPiano()).orElseThrow(EmptyDatabasePianoException::new),
+                pianoMapper.mapListOfPianoToListOfPianoResponse(pianoService.getAllPiano()).orElseThrow(EmptyDatabasePianoException::new),
                 HttpStatus.OK);
     }
 
@@ -70,7 +73,7 @@ public class PianoController {
     @GetMapping(value = "/pianosByModel/{model}")
     public ResponseEntity<List<PianoResponse>> getAllPianoByModel(@PathVariable(name = "model") String model) {
         return new ResponseEntity<>(
-                mapListOfPianoToListOfPianoResponse(pianoService.getAllPianoByModel(model)).orElseThrow(() -> new PianoNotFoundException(model)),
+                pianoMapper.mapListOfPianoToListOfPianoResponse(pianoService.getAllPianoByModel(model)).orElseThrow(() -> new PianoNotFoundException(model)),
                 HttpStatus.OK);
     }
 
@@ -81,7 +84,7 @@ public class PianoController {
             @PathVariable(name = "price") Integer price
     ) {
         return new ResponseEntity<>(
-                mapOptionalPianoToOptionalResponsePiano(pianoService.updatePianoPriceWithSku(sku, price))
+                pianoMapper.mapOptionalPianoToOptionalResponsePiano(pianoService.updatePianoPriceWithSku(sku, price))
                         .orElseThrow(() -> new PianoNotFoundException(sku)),
                 HttpStatus.OK);
     }
@@ -90,7 +93,7 @@ public class PianoController {
     @DeleteMapping(value = "deletePianoById/{id}")
     public ResponseEntity<PianoResponse> deletePianoById(@PathVariable(name = "id") Long id) {
         return new ResponseEntity<>(
-                mapOptionalPianoToOptionalResponsePiano(pianoService.deletePianoById(id))
+                pianoMapper.mapOptionalPianoToOptionalResponsePiano(pianoService.deletePianoById(id))
                         .orElseThrow(() -> new PianoNotFoundException("piano id: " + id)),
                 HttpStatus.OK);
     }
@@ -99,49 +102,8 @@ public class PianoController {
     @DeleteMapping(value = "/deletePianoWithSku/{sku}")
     public ResponseEntity<PianoResponse> deletePianoWithSku(@PathVariable(name = "sku") String sku) {
         return new ResponseEntity<>(
-                mapOptionalPianoToOptionalResponsePiano(pianoService.deletePianoWithSku(sku)).orElseThrow(() -> new PianoNotFoundException(sku)),
+                pianoMapper.mapOptionalPianoToOptionalResponsePiano(pianoService.deletePianoWithSku(sku)).orElseThrow(() -> new PianoNotFoundException(sku)),
                 HttpStatus.OK);
-    }
-
-
-    /*@GetMapping(value = "/test")
-    public ResponseEntity<Test> test(){
-        return new ResponseEntity<>(new Test("test"),HttpStatus.OK);
-    }*/
-
-    private Optional<List<PianoResponse>> mapListOfPianoToListOfPianoResponse(Optional<List<Piano>> optionalPianos) {
-        return optionalPianos.map(pianos ->
-                pianos.stream()
-                        .map(this::mapPianoToResponsePiano)
-                        .collect(Collectors.toList())
-        );
-    }
-
-    private PianoResponse mapPianoToResponsePiano(Piano piano) {
-        return PianoResponse.builder()
-                .id(piano.getId())
-                .name(piano.getName())
-                .price(piano.getPrice())
-                .weight(piano.getWeight())
-                .SKU(piano.getSKU())
-                .dimension(DimensionResponse.builder()
-                        .height(piano.getDimension().getHeight())
-                        .width(piano.getDimension().getWidth())
-                        .Length(piano.getDimension().getLength())
-                        .build())
-                .modelOfPiano(piano.getModelOfPiano())
-                .producer(ProducerResponse.builder()
-                        .companyName(piano.getProducer().getCompanyName())
-                        .build())
-                .warehouse(WarehouseResponse.builder()
-                        .description(piano.getWarehouse().getDescription())
-                        .location(piano.getWarehouse().getLocation())
-                        .build())
-                .build();
-    }
-
-    private Optional<PianoResponse> mapOptionalPianoToOptionalResponsePiano(Optional<Piano> optionalPiano) {
-        return optionalPiano.map(this::mapPianoToResponsePiano);
     }
 
 }
